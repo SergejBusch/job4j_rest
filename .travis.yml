@@ -1,0 +1,35 @@
+language: java
+jdk:
+  - openjdk16
+
+install: true
+
+script:
+  - mvn install
+
+services:
+  - postgresql
+
+before_install:
+  - psql -c 'CREATE DATABASE auth' -U postgres
+
+sudo: false
+
+git:
+  submodules: true
+
+after_success:
+  - export CODECOV_TOKEN="692f4838-90b8-495a-b6b8-c7815f9a7612"
+  - bash <(curl -s https://codecov.io/bash)
+
+
+notifications:
+  email:
+    recipients:
+      -herimvsem@gmail.com
+    on_success: never # default: change
+    on_failure: always # default: always
+
+env:
+  global:
+     - CODECOV_TOKEN="692f4838-90b8-495a-b6b8-c7815f9a7612"
