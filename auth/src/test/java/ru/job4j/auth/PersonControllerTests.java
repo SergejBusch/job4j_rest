@@ -50,7 +50,7 @@ public class PersonControllerTests {
 
         json = objectMapper.writeValueAsString(person);
 
-        baseUrl = "http://localhost:" + randomServerPort + "/person";
+        baseUrl = "http://localhost:" + randomServerPort + "/person/";
 
         restTemplate = new RestTemplate();
     }
@@ -59,13 +59,11 @@ public class PersonControllerTests {
     public void whenGetPersonThenReturnJsonObject() throws Exception {
         when(personRepository.findById(1)).thenReturn(java.util.Optional.ofNullable(person));
 
-        URI uri = new URI(baseUrl + "/1");
+        URI uri = new URI(baseUrl + "1");
         ResponseEntity<String> result = restTemplate.getForEntity(uri, String.class);
 
         assertEquals(200, result.getStatusCodeValue());
         assertEquals(json, result.getBody());
-
-
 
     }
 
@@ -75,20 +73,19 @@ public class PersonControllerTests {
 
         when(personRepository.findAll()).thenReturn(personList);
 
-        URI uri = new URI(baseUrl + "/");
+        URI uri = new URI(baseUrl);
         ResponseEntity<List<Person>>  result = restTemplate.exchange(
                 uri, HttpMethod.GET, null, new ParameterizedTypeReference<>(){});
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(person, result.getBody().get(0));
-
     }
 
     @Test
     public void whenSavePersonThenReturnTooJsonObject() throws Exception {
         given(personRepository.save(person)).willReturn(person);
 
-        URI uri = new URI(baseUrl + "/");
+        URI uri = new URI(baseUrl);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -97,14 +94,13 @@ public class PersonControllerTests {
 
         assertEquals(HttpStatus.CREATED, result.getStatusCode());
         assertEquals(json, result.getBody());
-
     }
 
     @Test
     public void whenUpdatePersonThenReturnOk() throws Exception {
         given(personRepository.save(person)).willReturn(person);
 
-        URI uri = new URI(baseUrl + "/");
+        URI uri = new URI(baseUrl);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -118,7 +114,7 @@ public class PersonControllerTests {
     public void whenDeletePersonThenReturnTooOk() throws Exception {
         doNothing().when(personRepository).delete(person);
 
-        URI uri = new URI(baseUrl + "/1");
+        URI uri = new URI(baseUrl + "1");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
